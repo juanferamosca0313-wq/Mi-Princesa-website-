@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Mi Princesa Hermosa 🌷</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #e8849a;
+    --rose-light: #f5c0ce;
+    --rose-pale: #fdeef2;
+    --rose-deep: #c4607a;
+    --gold: #d4a96a;
+    --gold-light: #f0d9b5;
+    --cream: #fdf8f5;
+    --text: #3d2433;
+    --text-soft: #7a5567;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CURSOR ── */
+  .cursor {
+    width: 18px; height: 18px;
+    background: var(--rose);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, background 0.3s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-trail {
+    width: 8px; height: 8px;
+    background: var(--rose-light);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: left 0.15s ease, top 0.15s ease;
+  }
+
+  /* ── CANVAS PETALS ── */
+  #petal-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(253,248,245,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232,132,154,0.15);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--rose-deep);
+    letter-spacing: 0.5px;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    transition: color 0.3s;
+    font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--rose-deep); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 100px 20px 60px;
+    overflow: hidden;
+  }
+
+  .hero-bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 30%, rgba(245,192,206,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(212,169,106,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 70%, rgba(232,132,154,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--rose-deep);
+  }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-style: italic;
+    color: var(--text-soft);
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+  .hero-dedication {
+    max-width: 520px;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--text-soft);
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: linear-gradient(135deg, var(--rose-deep), var(--rose));
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 30px rgba(196,96,122,0.3);
+    opacity: 0;
+    animation: fadeUp 1s ease 1.5s forwards;
+  }
+  .hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(196,96,122,0.4);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 1s ease 2s forwards;
+  }
+  .scroll-hint span {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--rose-light);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--rose-light), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  section {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ── STORY SECTION ── */
+  #historia {
+    padding: 100px 20px;
+    background: linear-gradient(180deg, var(--cream) 0%, #fff8fb 50%, var(--cream) 100%);
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+  .section-tag {
+    font-size: 0.65rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--rose);
+    display: block;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .section-title em { font-style: italic; color: var(--rose-deep); }
+  .section-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--rose), transparent);
+    margin: 20px auto 0;
+  }
+
+  .chapters-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+  }
+
+  .chapter-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 32px;
+    border: 1px solid rgba(232,132,154,0.12);
+    box-shadow: 0 4px 24px rgba(196,96,122,0.06);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.4s ease;
+  }
+  .chapter-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chapter-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(196,96,122,0.14);
+  }
+  .chapter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--rose-light), var(--rose-deep), var(--gold));
+  }
+  .chapter-number {
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: var(--rose-light);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .chapter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .chapter-text {
+    font-size: 0.85rem;
+    line-height: 1.85;
+    color: var(--text-soft);
+  }
+  .chapter-quote {
+    margin-top: 20px;
+    padding: 14px 18px;
+    background: var(--rose-pale);
+    border-left: 3px solid var(--rose);
+    border-radius: 0 10px 10px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--rose-deep);
+    line-height: 1.6;
+  }
+
+  /* ── TULIP DIVIDER ── */
+  .tulip-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 20px;
+  }
+  .tulip-divider-line {
+    flex: 1;
+    max-width: 200px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rose-light));
+  }
+  .tulip-divider-line.right {
+    background: linear-gradient(to left, transparent, var(--rose-light));
+  }
+
+  /* ── RAZONES SECTION ── */
+  #razones {
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #fff5f8 0%, #fffaf5 50%, #fff5f8 100%);
+  }
+
+  .razones-intro {
+    max-width: 600px;
+    margin: 0 auto 70px;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--text-soft);
+  }
+
+  .razones-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .razon-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    border: 1px solid rgba(232,132,154,0.1);
+    box-shadow: 0 2px 16px rgba(196,96,122,0.05);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: default;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  .razon-card.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .razon-card:hover {
+    transform: scale(1.05) rotate(-1deg);
+    box-shadow: 0 12px 36px rgba(196,96,122,0.16);
+    border-color: var(--rose-light);
+    background: linear-gradient(135deg, #fff, var(--rose-pale));
+  }
+  .razon-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .razon-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  /* ── LOVE MORE SECTION ── */
+  #mas-razones {
+    padding: 100px 20px;
+    background: linear-gradient(180deg, var(--cream) 0%, #fff0f5 100%);
+    text-align: center;
+  }
+
+  .mas-razones-intro {
+    max-width: 550px;
+    margin: 0 auto 50px;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--text-soft);
+  }
+
+  .generator-box {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 28px;
+    padding: 50px 44px;
+    border: 1px solid rgba(232,132,154,0.15);
+    box-shadow: 0 8px 48px rgba(196,96,122,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .generator-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(to right, var(--rose-light), var(--rose-deep), var(--gold), var(--rose-deep), var(--rose-light));
+  }
+
+  .generated-razon {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 36px;
+    transition: opacity 0.4s;
+  }
+  .generated-razon.loading { opacity: 0.4; }
+
+  .generate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 38px;
+    background: linear-gradient(135deg, var(--rose-deep), var(--rose));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 8px 24px rgba(196,96,122,0.28);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+  }
+  .generate-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(196,96,122,0.4);
+  }
+  .generate-btn:active { transform: translateY(0); }
+  .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-spin { display: none; }
+  .generate-btn.loading .btn-spin { display: inline-block; animation: spin 1s linear infinite; }
+  .generate-btn.loading .btn-text { opacity: 0.7; }
+
+  /* ── FINAL MESSAGE ── */
+  #mensaje {
+    padding: 120px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #3d2433 0%, #5c2d42 50%, #3d2433 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  #mensaje::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e8849a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .mensaje-content { position: relative; max-width: 700px; margin: 0 auto; }
+  .mensaje-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--rose-light);
+    display: block;
+    margin-bottom: 28px;
+  }
+  .mensaje-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 36px;
+  }
+  .mensaje-title em { font-style: italic; color: var(--rose-light); }
+  .mensaje-text {
+    font-size: 0.9rem;
+    line-height: 2;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 20px;
+  }
+  .mensaje-firma {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-top: 40px;
+  }
+
+  /* ── SVG TULIPS ── */
+  .tulip-deco {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .floating-tulip {
+    position: absolute;
+    pointer-events: none;
+    animation: floatTulip linear infinite;
+    opacity: 0;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes floatTulip {
+    0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(-100vh) rotate(360deg); }
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav { padding: 14px 20px; }
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 0.65rem; }
+    .generator-box { padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- Falling Petals Canvas -->
+<canvas id="petal-canvas"></canvas>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">🌷 Mi Princesa</div>
+  <div class="nav-links">
+    <a href="#historia">Historia</a>
+    <a href="#razones">50 Razones</a>
+    <a href="#mas-razones">Más Razones</a>
+    <a href="#mensaje">Para Ti</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-gradient"></div>
+  <p class="hero-eyebrow">✦ Un cuento de amor verdadero ✦</p>
+  <h1 class="hero-title">Un Reino<br><em>Construido</em><br>a Cuatro Corazones</h1>
+  <p class="hero-subtitle">Mariana, Juan Felipe, Nala & Mandarina</p>
+  <p class="hero-dedication">
+    Este espacio nació de muchas historias,<br>
+    de pasos compartidos y silencios sinceros,<br>
+    de miradas que eligieron quedarse.<br>
+    <em>Para ti, que siempre serás mi niña hermosa.</em>
+  </p>
+  <a href="#historia" class="hero-cta">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Comenzar la historia
+  </a>
+  <div class="scroll-hint">
+    <span>Desplázate</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TULIP DIVIDER -->
+<div class="tulip-divider">
+  <div class="tulip-divider-line"></div>
+  <svg class="tulip-deco" width="80" height="90" viewBox="0 0 80 90">
+    <g transform="translate(40,85)">
+      <!-- stem -->
+      <line x1="0" y1="0" x2="0" y2="-45" stroke="#c4a882" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M0,-25 Q-14,-30 -16,-42" stroke="#7db87d" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="-16" cy="-43" rx="6" ry="4" fill="#8fc98f" transform="rotate(-30,-16,-43)"/>
+      <!-- petals -->
+      <ellipse cx="-8" cy="-55" rx="7" ry="16" fill="#e8849a" transform="rotate(-15,-8,-55)" opacity="0.95"/>
+      <ellipse cx="8" cy="-55" rx="7" ry="16" fill="#e8849a" transform="rotate(15,8,-55)" opacity="0.95"/>
+      <ellipse cx="0" cy="-62" rx="7" ry="16" fill="#f0a0b8" opacity="0.9"/>
+      <ellipse cx="-6" cy="-54" rx="5" ry="12" fill="#f5c0ce" transform="rotate(-10,-6,-54)" opacity="0.7"/>
+      <ellipse cx="6" cy="-54" rx="5" ry="12" fill="#f5c0ce" transform="rotate(10,6,-54)" opacity="0.7"/>
+      <!-- center -->
+      <ellipse cx="0" cy="-58" rx="3" ry="5" fill="#d4a96a" opacity="0.8"/>
+    </g>
+  </svg>
+  <svg class="tulip-deco" width="60" height="70" viewBox="0 0 60 70">
+    <g transform="translate(30,65)">
+      <line x1="0" y1="0" x2="0" y2="-35" stroke="#c4a882" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="-6" cy="-42" rx="6" ry="13" fill="#f0a0b8" transform="rotate(-12,-6,-42)" opacity="0.95"/>
+      <ellipse cx="6" cy="-42" rx="6" ry="13" fill="#f0a0b8" transform="rotate(12,6,-42)" opacity="0.95"/>
+      <ellipse cx="0" cy="-48" rx="6" ry="13" fill="#fbc8d8" opacity="0.9"/>
+      <ellipse cx="0" cy="-45" rx="2.5" ry="4" fill="#d4a96a" opacity="0.8"/>
+    </g>
+  </svg>
+  <svg class="tulip-deco" width="80" height="90" viewBox="0 0 80 90">
+    <g transform="translate(40,85)">
+      <line x1="0" y1="0" x2="0" y2="-45" stroke="#c4a882" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M0,-22 Q14,-28 15,-40" stroke="#7db87d" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="15" cy="-41" rx="6" ry="4" fill="#8fc98f" transform="rotate(30,15,-41)"/>
+      <ellipse cx="-8" cy="-55" rx="7" ry="16" fill="#e8849a" transform="rotate(-15,-8,-55)" opacity="0.95"/>
+      <ellipse cx="8" cy="-55" rx="7" ry="16" fill="#e8849a" transform="rotate(15,8,-55)" opacity="0.95"/>
+      <ellipse cx="0" cy="-62" rx="7" ry="16" fill="#f0a0b8" opacity="0.9"/>
+      <ellipse cx="0" cy="-58" rx="3" ry="5" fill="#d4a96a" opacity="0.8"/>
+    </g>
+  </svg>
+  <div class="tulip-divider-line right"></div>
+</div>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <div class="section-header">
+    <span class="section-tag">✦ Parte I ✦</span>
+    <h2 class="section-title">El Camino del<br><em>Conocimiento</em></h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="chapters-grid">
+
+    <div class="chapter-card">
+      <span class="chapter-number">Capítulo I</span>
+      <h3 class="chapter-title">El Vínculo que Iluminó el Reino</h3>
+      <p class="chapter-text">Desde siempre, Mariana había sabido que no estaba sola. Mucho antes de que el amor tomara forma, estaba Nala — con el pelaje color miel y ojos que comprendían más de lo que cualquier criatura debería.</p>
+      <div class="chapter-quote">"Si Nala confía en ti — dijo — entonces el reino también lo hará."</div>
+    </div>
+
+    <div class="chapter-card">
+      <span class="chapter-number">Capítulo II</span>
+      <h3 class="chapter-title">Donde el Amor Aprende a Escuchar</h3>
+      <p class="chapter-text">En La Pradera de los Ecos Suaves, la hierba no se movía con el viento sino con las emociones. Allí entendieron que el amor no necesita perfección... necesita presencia.</p>
+      <div class="chapter-quote">"No quiero un amor sin miedo. Quiero uno donde podamos hablar incluso cuando tiemble la voz."</div>
+    </div>
+
+    <div class="chapter-card">
+      <span class="chapter-number">Capítulo V</span>
+      <h3 class="chapter-title">La Ciudad que Reflejaba lo que Amas</h3>
+      <p class="chapter-text">En Mirabelle, ciudad de los Reflejos, no se veía el rostro sino el corazón. Mariana se vio como refugio. Juan Felipe como presencia constante. Nala multiplicada, fuerte y sabia.</p>
+      <div class="chapter-quote">"No necesito verme perfecta en tus ojos... solo verdadera."</div>
+    </div>
+
+    <div class="chapter-card">
+      <span class="chapter-number">Capítulo VI</span>
+      <h3 class="chapter-title">Mandarina y el Camino que Une</h3>
+      <p class="chapter-text">En un valle cubierto de flores claras, bajo un árbol solitario de ramas como brazos protectores, cuatro almas encontraron que el verdadero camino te permite seguir eligiéndote cada día.</p>
+      <div class="chapter-quote">"No sé a dónde nos llevará el camino, pero quiero recorrerlo contigo. A tu lado."</div>
+    </div>
+
+    <div class="chapter-card">
+      <span class="chapter-number">Capítulo VII</span>
+      <h3 class="chapter-title">El Fuego que No Quema</h3>
+      <p class="chapter-text">En una meseta donde el atardecer se quedaba un poco más de lo normal, hogueras espontáneas surgían no para dar calor sino para recordar. El amor aprendió a cuidar su fuego.</p>
+      <div class="chapter-quote">"El amor no siempre es impulso. A veces es cuidar el fuego para que no se apague... ni se vuelva incendio."</div>
+    </div>
+
+    <div class="chapter-card">
+      <span class="chapter-number">El Final que No Es Final</span>
+      <h3 class="chapter-title">Donde el Amor se Vuelve Leyenda</h3>
+      <p class="chapter-text">Cuatro almas unidas por algo que no necesitaba mapas ni destinos. Dicen que cuando la luna brilla más suave de lo normal, aún se puede ver a los tres caminando juntos... como si el mundo entero fuera su hogar.</p>
+      <div class="chapter-quote">"Esta historia apenas empieza a respirar."</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TULIP DIVIDER 2 -->
+<div class="tulip-divider">
+  <div class="tulip-divider-line"></div>
+  <svg width="40" height="50" viewBox="0 0 40 50">
+    <g transform="translate(20,46)">
+      <line x1="0" y1="0" x2="0" y2="-28" stroke="#c4a882" stroke-width="1.8" stroke-linecap="round"/>
+      <ellipse cx="-5" cy="-35" rx="5" ry="10" fill="#e8849a" transform="rotate(-12,-5,-35)"/>
+      <ellipse cx="5" cy="-35" rx="5" ry="10" fill="#e8849a" transform="rotate(12,5,-35)"/>
+      <ellipse cx="0" cy="-40" rx="5" ry="10" fill="#f5c0ce"/>
+      <ellipse cx="0" cy="-37" rx="2" ry="3.5" fill="#d4a96a"/>
+    </g>
+  </svg>
+  <svg width="40" height="50" viewBox="0 0 40 50">
+    <g transform="translate(20,46)">
+      <line x1="0" y1="0" x2="0" y2="-28" stroke="#c4a882" stroke-width="1.8" stroke-linecap="round"/>
+      <ellipse cx="-5" cy="-35" rx="5" ry="10" fill="#f0a0b8" transform="rotate(-12,-5,-35)"/>
+      <ellipse cx="5" cy="-35" rx="5" ry="10" fill="#f0a0b8" transform="rotate(12,5,-35)"/>
+      <ellipse cx="0" cy="-40" rx="5" ry="10" fill="#fbc8d8"/>
+      <ellipse cx="0" cy="-37" rx="2" ry="3.5" fill="#d4a96a"/>
+    </g>
+  </svg>
+  <svg width="40" height="50" viewBox="0 0 40 50">
+    <g transform="translate(20,46)">
+      <line x1="0" y1="0" x2="0" y2="-28" stroke="#c4a882" stroke-width="1.8" stroke-linecap="round"/>
+      <ellipse cx="-5" cy="-35" rx="5" ry="10" fill="#e8849a" transform="rotate(-12,-5,-35)"/>
+      <ellipse cx="5" cy="-35" rx="5" ry="10" fill="#e8849a" transform="rotate(12,5,-35)"/>
+      <ellipse cx="0" cy="-40" rx="5" ry="10" fill="#f5c0ce"/>
+      <ellipse cx="0" cy="-37" rx="2" ry="3.5" fill="#d4a96a"/>
+    </g>
+  </svg>
+  <div class="tulip-divider-line right"></div>
+</div>
+
+<!-- 50 RAZONES -->
+<section id="razones">
+  <div class="section-header">
+    <span class="section-tag">✦ Desde el corazón ✦</span>
+    <h2 class="section-title">50 Razones para<br><em>Volver a Intentarlo</em></h2>
+    <div class="section-divider"></div>
+  </div>
+  <p class="razones-intro">
+    Eres mi princesa, eres mi amor, eres la mujer que Dios me mandó para conocer realmente qué es el amor. Alguien que siempre estará a tu lado para apoyarte y para levantarte.
+  </p>
+
+  <div class="razones-container" id="razonesGrid"></div>
+</section>
+
+<!-- MAS RAZONES -->
+<section id="mas-razones">
+  <div class="section-header">
+    <span class="section-tag">✦ Infinito ✦</span>
+    <h2 class="section-title">Razones para<br><em>Seguir Amándote</em></h2>
+    <div class="section-divider"></div>
+  </div>
+  <p class="mas-razones-intro">
+    Las razones para amarte no caben en una lista. Cada día que pasa, aparecen más. Aquí puedes descubrir una nueva razón cada vez que lo necesites.
+  </p>
+
+  <div class="generator-box">
+    <div class="generated-razon" id="generatedRazon">
+      "Porque cada vez que te miro, descubro algo nuevo que amar en ti." 🌷
+    </div>
+    <button class="generate-btn" id="generateBtn" onclick="generateRazon()">
+      <svg class="btn-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+      <span class="btn-text">Descubrir otra razón</span>
+    </button>
+  </div>
+</section>
+
+<!-- TULIP DIVIDER 3 -->
+<div class="tulip-divider" style="background: linear-gradient(180deg, #fff0f5 0%, #3d2433 100%)">
+  <div class="tulip-divider-line" style="background: linear-gradient(to right, transparent, rgba(232,132,154,0.4))"></div>
+  <svg width="60" height="70" viewBox="0 0 60 70">
+    <g transform="translate(30,66)">
+      <line x1="0" y1="0" x2="0" y2="-38" stroke="#c4a882" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="-6" cy="-46" rx="6" ry="14" fill="#f5c0ce" transform="rotate(-14,-6,-46)" opacity="0.9"/>
+      <ellipse cx="6" cy="-46" rx="6" ry="14" fill="#f5c0ce" transform="rotate(14,6,-46)" opacity="0.9"/>
+      <ellipse cx="0" cy="-52" rx="6" ry="14" fill="#fdeef2" opacity="0.9"/>
+      <ellipse cx="0" cy="-48" rx="2.5" ry="4" fill="#d4a96a" opacity="0.9"/>
+    </g>
+  </svg>
+  <div class="tulip-divider-line right" style="background: linear-gradient(to left, transparent, rgba(232,132,154,0.4))"></div>
+</div>
+
+<!-- MENSAJE FINAL -->
+<section id="mensaje">
+  <div class="mensaje-content">
+    <span class="mensaje-eyebrow">✦ Para siempre ✦</span>
+    <h2 class="mensaje-title">Tú fuiste quien le<br>mostró a este niño<br><em>cómo amar</em></h2>
+    <p class="mensaje-text">
+      Pase lo que pase, te doy las gracias.<br>
+      Y créeme que si está en mis manos,<br>
+      lucharé por volver a tenerte.
+    </p>
+    <p class="mensaje-text" style="margin-top: 16px;">
+      Te amo infinito, mi niña hermosa.<br>
+      Mi lugar seguro. Mi comienzo favorito.
+    </p>
+    <div class="mensaje-firma">— Juan Felipe 🌷</div>
+  </div>
+</section>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    trail.style.left = e.clientX + 'px';
+    trail.style.top = e.clientY + 'px';
+  }, 80);
+});
+
+// ── FALLING PETALS ──
+const canvas = document.getElementById('petal-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+const petals = [];
+const petalColors = ['#f5c0ce','#e8849a','#fbc8d8','#f0a0b8','#fdeef2','#f5c0ce'];
+
+function createPetal() {
+  return {
+    x: Math.random() * canvas.width,
+    y: -20,
+    size: Math.random() * 10 + 6,
+    speedY: Math.random() * 1.5 + 0.5,
+    speedX: Math.random() * 1 - 0.5,
+    rotation: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.05,
+    color: petalColors[Math.floor(Math.random() * petalColors.length)],
+    opacity: Math.random() * 0.5 + 0.2,
+    type: Math.random() < 0.5 ? 'petal' : 'tulip',
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: Math.random() * 0.02 + 0.01
+  };
+}
+
+function drawTulipPetal(ctx, p) {
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rotation);
+  ctx.globalAlpha = p.opacity;
+  // Draw small tulip shape
+  ctx.fillStyle = p.color;
+  ctx.beginPath();
+  ctx.ellipse(-p.size*0.4, -p.size*0.8, p.size*0.35, p.size*0.8, -0.2, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(p.size*0.4, -p.size*0.8, p.size*0.35, p.size*0.8, 0.2, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#f5c0ce';
+  ctx.beginPath();
+  ctx.ellipse(0, -p.size*1.1, p.size*0.35, p.size*0.8, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawPetal(ctx, p) {
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rotation);
+  ctx.globalAlpha = p.opacity;
+  ctx.fillStyle = p.color;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, p.size * 0.5, p.size, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+let lastPetal = 0;
+function animatePetals(ts) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (ts - lastPetal > 300) {
+    if (petals.length < 40) petals.push(createPetal());
+    lastPetal = ts;
+  }
+  for (let i = petals.length - 1; i >= 0; i--) {
+    const p = petals[i];
+    p.y += p.speedY;
+    p.x += p.speedX + Math.sin(p.wobble) * 0.5;
+    p.wobble += p.wobbleSpeed;
+    p.rotation += p.rotSpeed;
+    if (p.type === 'tulip') drawTulipPetal(ctx, p);
+    else drawPetal(ctx, p);
+    if (p.y > canvas.height + 30) petals.splice(i, 1);
+  }
+  requestAnimationFrame(animatePetals);
+}
+requestAnimationFrame(animatePetals);
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      const delay = entry.target.dataset.delay || 0;
+      setTimeout(() => entry.target.classList.add('visible'), delay);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.chapter-card, .razon-card').forEach((el, i) => {
+  el.dataset.delay = (i % 4) * 80;
+  observer.observe(el);
+});
+
+// ── 50 RAZONES ──
+const razones50 = [
+  { icon: '💞', text: 'Porque tenemos amor' },
+  { icon: '❤️', text: 'Porque me importas' },
+  { icon: '👂', text: 'Porque me escuchas' },
+  { icon: '🤗', text: 'Porque me encanta abrazarte' },
+  { icon: '😄', text: 'Porque me haces reír' },
+  { icon: '📖', text: 'Porque compartimos historia' },
+  { icon: '🌟', text: 'Porque contigo soy yo' },
+  { icon: '🧠', text: 'Porque me entiendes' },
+  { icon: '🤝', text: 'Porque somos equipo' },
+  { icon: '😂', text: 'Porque te hago reír' },
+  { icon: '💋', text: 'Porque extraño tus besos' },
+  { icon: '🏡', text: 'Porque me haces sentir en casa' },
+  { icon: '✨', text: 'Porque hay química entre nosotros' },
+  { icon: '👀', text: 'Porque me encanta mirarte' },
+  { icon: '🙏', text: 'Porque no quiero perderte' },
+  { icon: '😍', text: 'Porque cada vez que veo tu carita me vuelvo a enamorar' },
+  { icon: '🪄', text: 'Porque aún hay magia' },
+  { icon: '💫', text: 'Porque me haces sentir especial' },
+  { icon: '🌈', text: 'Porque contigo todo es mejor' },
+  { icon: '🎵', text: 'Porque me encanta tu voz' },
+  { icon: '👁️', text: 'Porque tu mirada me atrapa' },
+  { icon: '🌸', text: 'Porque aún hay ilusión' },
+  { icon: '💪', text: 'Porque me haces bien' },
+  { icon: '∞', text: 'Porque juntos somos más' },
+  { icon: '🌱', text: 'Porque me nace quedarme' },
+  { icon: '🔥', text: 'Porque quiero intentarlo' },
+  { icon: '🗺️', text: 'Porque hay cosas por vivir' },
+  { icon: '💃', text: 'Porque me encanta tu cuerpo' },
+  { icon: '😊', text: 'Porque quiero verte feliz' },
+  { icon: '🔗', text: 'Porque no es fácil soltarte' },
+  { icon: '🌊', text: 'Porque contigo todo se siente más intenso' },
+  { icon: '🧩', text: 'Porque me gusta cómo encajamos' },
+  { icon: '💭', text: 'Porque me haces desearte más' },
+  { icon: '⚡', text: 'Porque me haces sentir vivo' },
+  { icon: '🦋', text: 'Por nuestros planes' },
+  { icon: '🌙', text: 'Por nuestros sueños' },
+  { icon: '🕊️', text: 'Porque tu cercanía me da paz' },
+  { icon: '🎯', text: 'Porque no me canso de mirarte' },
+  { icon: '🧲', text: 'Porque tu energía me atrae' },
+  { icon: '⭐', text: 'Por tu historia' },
+  { icon: '🌟', text: 'Porque el destino nos volvió a juntar' },
+  { icon: '🤲', text: 'Por cómo nos ayudamos' },
+  { icon: '🌺', text: 'Porque haces que todo tenga sentido' },
+  { icon: '🌷', text: 'Porque simplemente eres tú' },
+  { icon: '💖', text: 'Porque contigo quiero todo' },
+  { icon: '🌹', text: 'Porque te amo' },
+  { icon: '💝', text: 'Porque tu mirada me da vida' },
+  { icon: '🌻', text: 'Porque me hace bien quererte' },
+  { icon: '🫀', text: 'Porque me enseñaste a amar de verdad' },
+  { icon: '👑', text: 'Porque eres mi princesa' }
+];
+
+const grid = document.getElementById('razonesGrid');
+razones50.forEach((r, i) => {
+  const card = document.createElement('div');
+  card.className = 'razon-card';
+  card.innerHTML = `<div class="razon-icon">${r.icon}</div><div class="razon-text">${r.text}</div>`;
+  card.dataset.delay = (i % 6) * 60;
+  grid.appendChild(card);
+  observer.observe(card);
+});
+
+// ── AI RAZON GENERATOR ──
+const razonesIA = [
+  "Porque cuando duermes tienes la paz de alguien que sabe que es amada.",
+  "Porque tu forma de decir mi nombre hace que todo valga la pena.",
+  "Porque en tus ojos encontré el hogar que había estado buscando.",
+  "Porque me enseñaste que el amor verdadero no grita, simplemente permanece.",
+  "Porque incluso en silencio, contigo es suficiente.",
+  "Porque cuando ríes, el mundo entero parece ponerse de acuerdo contigo.",
+  "Porque me inspiras a ser mejor cada día sin pedirme que cambie.",
+  "Porque tu valentía me recuerda que también puedo ser valiente.",
+  "Porque cada pequeño gesto tuyo tiene más peso que mil palabras.",
+  "Porque contigo aprendí que amar es una decisión que quiero tomar todos los días.",
+  "Porque eres la razón por la que creo que las historias bonitas sí existen.",
+  "Porque me recuerdas que la vida tiene más sentido cuando se vive de tu mano.",
+  "Porque en tus manos siento que nada puede salir mal.",
+  "Porque tu ternura me desarmó en los momentos en que más lo necesitaba.",
+  "Porque tienes una forma única de hacer que lo ordinario se vuelva extraordinario.",
+  "Porque cuando me miras, sé que me ves de verdad.",
+  "Porque eres de esas personas que hacen que el tiempo valga más.",
+  "Porque cada vez que pienso en ti, sonrío sin querer.",
+  "Porque me diste razones para creer cuando ya no las tenía.",
+  "Porque eres el tipo de amor que no se olvida, aunque pase todo el tiempo del mundo.",
+  "Porque contigo descubrí que el amor no duele cuando es verdadero.",
+  "Porque en tus brazos el mundo se vuelve un poco más pequeño y mucho más mío.",
+  "Porque eres la tulipa rosada favorita de mi vida entera.",
+  "Porque me enseñaste a cuidar lo que quiero sin tener miedo.",
+  "Porque eres la historia que elegiría releer una y otra vez.",
+];
+
+let usedRazones = [];
+
+function generateRazon() {
+  const btn = document.getElementById('generateBtn');
+  const display = document.getElementById('generatedRazon');
+
+  if (usedRazones.length === razonesIA.length) usedRazones = [];
+  const available = razonesIA.filter((_, i) => !usedRazones.includes(i));
+  const idx = razonesIA.indexOf(available[Math.floor(Math.random() * available.length)]);
+  usedRazones.push(idx);
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  display.classList.add('loading');
+
+  setTimeout(() => {
+    display.innerHTML = `"${razonesIA[idx]}" 🌷`;
+    display.classList.remove('loading');
+    btn.disabled = false;
+    btn.classList.remove('loading');
+
+    // Burst petals on generate
+    for (let i = 0; i < 8; i++) {
+      const p = createPetal();
+      p.x = Math.random() * window.innerWidth;
+      p.y = window.innerHeight * 0.7;
+      p.speedY = -(Math.random() * 3 + 2);
+      p.opacity = 0.8;
+      petals.push(p);
+    }
+  }, 900);
+}
+</script>
+</body>
+</html>
